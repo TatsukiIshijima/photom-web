@@ -1,0 +1,13 @@
+# flask + SQLite では docker-compose でコンテナを複数起動＆連携する
+# 必要性が薄いが、拡張性を持たせるために docker-compose で書いておく
+
+version: '3'
+services: 
+  flask:
+    # /flask ディレクトリの Dockerfile からイメージ構築
+    build: ./flask
+    ports: 
+      - "5000:5000"
+    # ホスト上の /flask ディレクトリをコンテナ内の /main ディレクトリにマウント
+    volumes:
+      - ./flask:/main
