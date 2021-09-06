@@ -1,6 +1,7 @@
-from models.photo import *
 from flask import Flask, json, render_template, request, redirect, url_for, send_from_directory, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
+from models.photo import *
+from PIL import Image
 from werkzeug.utils import secure_filename
 
 import os
@@ -37,6 +38,11 @@ def upload():
     filename = str(uuid.uuid4()) + ext
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     img_file.save(path)
+
+    # リサイズ
+    img = Image.open(path)
+    img_resize = img.resize((800, 480))
+    img_resize.save(path)
 
     # DB 書き込み
     photo = Photo(url=os.path.join('http://0.0.0.0:5000/', path))
