@@ -5,4 +5,5 @@ ADD . /main
 # 作業ディレクトリを /main に指定
 WORKDIR /main
 RUN pip install -r requirements.txt
-CMD ["python", "app.py"]
+# CMD は最後に書いたコマンドしか実行されないため、スクリプトでまとめて実行
+CMD ["./startup.sh"]
