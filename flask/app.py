@@ -1,12 +1,12 @@
+import os
+import requests
+import uuid
+
 from flask import Flask, json, render_template, request, redirect, url_for, send_from_directory, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from models.photo import *
 from PIL import Image
 from werkzeug.utils import secure_filename
-
-import os
-import requests
-import uuid
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'JPG', 'JPEG'])
@@ -23,8 +23,8 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
-def upload():
+@app.route('/photo/upload', methods=['POST'])
+def photo_upload():
     # 画像保存
     if 'img_file' not in request.files:
         return make_response(jsonify({'result': {'code': 1, 'description': 'file not exist.'}}))
@@ -54,6 +54,24 @@ def upload():
 def __is_allowed_extension(file_name):
     return '.' in file_name and file_name.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+@app.route('/photo/delete/<int:id>', methods=['POST'])
+def photo_delete(id):
+    photo = Photo.query.get(id)
+    if photo is None:
+        return make_response(jsonify({'result': {'code': 1, 'description': 'target is none.'}}))
+
+    # 画像削除
+    filename = os.path.basename(photo.url)
+    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    if not os.path.exists(path):
+        return make_response(jsonify({'result': {'code': 1, 'description': 'file not exist.'}}))
+    os.remove(path)
+
+    # DB から削除
+    db.session.query(Photo).filter(Photo.id == id).delete()
+    db.session.commit()
+    return make_response(jsonify({'result': {'code': 0, 'description': ''}}))
+
 @app.route('/weather', methods=['GET'])
 def weather():
     url = 'https://api.openweathermap.org/data/2.5/onecall'
@@ -69,6 +87,4 @@ def weather():
     return make_response(jsonify(request.text))
 
 if __name__ == "__main__":
-    # DB 作成
-    # db.create_all()
     app.run(host="0.0.0.0", debug=True)
