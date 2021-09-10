@@ -4,6 +4,7 @@ import uuid
 
 from flask import Flask, json, render_template, request, redirect, url_for, send_from_directory, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
+from flask_marshmallow import Marshmallow
 from models.photo import *
 from PIL import Image
 from werkzeug.utils import secure_filename
@@ -18,10 +19,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 db = SQLAlchemy(app)
+ma = Marshmallow(app)
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
+@app.route('/photo/list', methods=['GET'])
+def photo_list():
+    photo_list = Photo.query.all()
+    photo_list_scheme = PhotoScheme(many=True)
+    return photo_list_scheme.jsonify(photo_list)
 
 @app.route('/photo/upload', methods=['POST'])
 def photo_upload():
