@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- 参考：https://getbootstrap.jp/docs/5.0/examples/album/# -->
 <html lang="ja">
 	<head>
 		<meta charset="utf-8">
@@ -44,31 +45,45 @@
 				<div class="row py-lg-5">
 					<div class="col-lg-6 col-md-8 mx-auto">
 						<h1 class="fw-light">画像のアップロード</h1>
-						<p class="lead text-muted">アップロードする画像を選択してください。画像サイズは800x480 にリサイズされます。</p>
+						<p class="lead text-muted">アップロードする画像を選択してください。画像サイズは 800x480 にリサイズされます。</p>
 						<p>
 							<form action="/photo/upload" name="upload" method="POST" enctype="multipart/form-data">
 								<dl>
 									<dd><input type="file" id="img_file" name="img_file"></dd>
-									<dd><input class="btn btn-primary my-2 type="submit" value="送信"></dd>
+									<dd><button type="submit" class="btn btn-sm btn-outline-primary">送信</button></dd>
 								</dl>
 							</form>
 						</p>
 				  	</div>
 				</div>
 			</section>
-			{% block content %}
-				{% if photos %}
-					{% for photo in photos %}
-						<div>
-							<img src={{photo['url']}} style="margin-top: 10px; vertical-align: bottom; width: 128px;" alt="photo">
-							<br>
-							<form action="/photo/delete/{{photo['id']}}" name="delete" method="POST">
-								<input type="submit" value="削除">
-							</form>
-						</div>
-					{% endfor %}
-				{% endif %}
-			{% endblock %}
+			
+			<div class="album py-5 bg-light">
+				<div class="container">
+					<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+						{% block content %}
+							{% if photos %}
+								{% for photo in photos %}
+									<div class="col">
+										<div class="card shadow-sm">
+											<img class="bd-placeholder-img card-img-top" width="100%" height="240" src={{photo['url']}} alt="photo">
+											<div class="card-body">
+												<div class="d-flex justify-content-between align-items-center">
+													<div class="btn-group">
+														<form action="/photo/delete/{{photo['id']}}" name="delete" method="POST">
+															<button type="submit" class="btn btn-sm btn-outline-secondary">削除</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							{% endif %}
+						{% endblock %}
+					</div>
+				</div>
+			</div>
 		</main>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
