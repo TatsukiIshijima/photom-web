@@ -1,29 +1,77 @@
 <!doctype html>
-<html>
+<html lang="ja">
 	<head>
-		<title>index.html</title>
+		<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<meta name="description" content="">
+		<title>Photom</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<meta name="theme-color" content="#7952b3">
+
+		<style>
+			.bd-placeholder-img {
+				font-size: 1.125rem;
+				text-anchor: middle;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				user-select: none;
+			}
+	  
+			@media (min-width: 768px) {
+				.bd-placeholder-img-lg {
+					font-size: 3.5rem;
+				}
+			}
+		</style>
+
 	</head>
 	<body>
-        <h1>Photom</h1>
-		{% block content %}
-			<form action="/photo/upload" name="upload" method="POST" enctype="multipart/form-data">
-				<dl>
-					<dt>アップロードする画像を選択してください</dt>
-					<dd><input type="file" id="img_file" name="img_file"></dd>
-					<dd><input type="submit" value="送信"></dd>
-				</dl>
-			</form>
-			{% if photos %}
-				{% for photo in photos %}
-					<div>
-						<img src={{photo['url']}} style="margin-top: 10px; vertical-align: bottom; width: 128px;" alt="photo">
-						<br>
-						<form action="/photo/delete/{{photo['id']}}" name="delete" method="POST">
-							<input type="submit" value="削除">
-						</form>
-					</div>
-				{% endfor %}
-			{% endif %}
-    	{% endblock %}
+        <header>
+			<div class="navbar navbar-dark bg-dark shadow-sm">
+				<div class="container">
+					<a href="#" class="navbar-brand d-flex align-items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+						<strong>Photom</strong>
+				  	</a>
+				</div>
+			</div>
+		</header>
+
+		<main>
+			<section class="py-5 text-center container">
+				<div class="row py-lg-5">
+					<div class="col-lg-6 col-md-8 mx-auto">
+						<h1 class="fw-light">画像のアップロード</h1>
+						<p class="lead text-muted">アップロードする画像を選択してください。画像サイズは800x480 にリサイズされます。</p>
+						<p>
+							<form action="/photo/upload" name="upload" method="POST" enctype="multipart/form-data">
+								<dl>
+									<dd><input type="file" id="img_file" name="img_file"></dd>
+									<dd><input class="btn btn-primary my-2 type="submit" value="送信"></dd>
+								</dl>
+							</form>
+						</p>
+				  	</div>
+				</div>
+			</section>
+			{% block content %}
+				{% if photos %}
+					{% for photo in photos %}
+						<div>
+							<img src={{photo['url']}} style="margin-top: 10px; vertical-align: bottom; width: 128px;" alt="photo">
+							<br>
+							<form action="/photo/delete/{{photo['id']}}" name="delete" method="POST">
+								<input type="submit" value="削除">
+							</form>
+						</div>
+					{% endfor %}
+				{% endif %}
+			{% endblock %}
+		</main>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+	
 	</body>
 </html>
