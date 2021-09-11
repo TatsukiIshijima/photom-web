@@ -1,6 +1,7 @@
 from datetime import datetime
+from marshmallow import Schema, fields
+
 from app import db
-from app import ma
 
 class Photo(db.Model):
     __tablename__ = "Photos"
@@ -8,7 +9,7 @@ class Photo(db.Model):
     url = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
-class PhotoScheme(ma.Schema):
-    class Meta:
-        # fields で値を変更可能
-        fields = ("id", "url", "created_at")
+class PhotoSchema(Schema):
+    id = fields.Int(dump_only=True)
+    url = fields.Str()
+    created_at = fields.DateTime(dump_only=True)
