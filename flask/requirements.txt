@@ -1,5 +1,7 @@
 flask
 flask-marshmallow
 flask_sqlalchemy
+marshmallow
+marshmallow-sqlalchemy
 Pillow
 requests
