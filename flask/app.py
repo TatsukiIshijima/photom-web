@@ -26,14 +26,15 @@ result_schema = ResultSchema()
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    result = photo_list()
+    return render_template('index.html', photos=result['photos'])
 
 @app.route('/photo/list', methods=['GET'])
 def photo_list():
     photos = Photo.query.all()
     photos_schema = PhotoSchema(many=True)
     result = photos_schema.dump(photos)
-    return {"photos": result}
+    return {'photos': result}
 
 @app.route('/photo/upload', methods=['POST'])
 def photo_upload():

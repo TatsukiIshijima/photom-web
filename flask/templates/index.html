@@ -3,18 +3,27 @@
 	<head>
 		<title>index.html</title>
 	</head>
-	
 	<body>
         <h1>Photom</h1>
-		<form action="/photo/upload" name="upload" method="POST" enctype="multipart/form-data">
-			<dl>
-				<dt>アップロードする画像を選択してください</dt>
-				<dd><input type="file" id="img_file" name="img_file"></dd>
-				<dd><input type="submit" value="送信"></dd>
-			</dl>
-		</form>
-		<form action="/photo/delete/1" name="delete" method="POST">
-			<input type="submit" value="削除">
-		</form>
+		{% block content %}
+			<form action="/photo/upload" name="upload" method="POST" enctype="multipart/form-data">
+				<dl>
+					<dt>アップロードする画像を選択してください</dt>
+					<dd><input type="file" id="img_file" name="img_file"></dd>
+					<dd><input type="submit" value="送信"></dd>
+				</dl>
+			</form>
+			{% if photos %}
+				{% for photo in photos %}
+					<div>
+						<img src={{photo['url']}} style="margin-top: 10px; vertical-align: bottom; width: 128px;" alt="photo">
+						<br>
+						<form action="/photo/delete/{{photo['id']}}" name="delete" method="POST">
+							<input type="submit" value="削除">
+						</form>
+					</div>
+				{% endfor %}
+			{% endif %}
+    	{% endblock %}
 	</body>
 </html>
