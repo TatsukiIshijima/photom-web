@@ -46,14 +46,10 @@
 					<div class="col-lg-6 col-md-8 mx-auto">
 						<h1 class="fw-light">画像のアップロード</h1>
 						<p class="lead text-muted">アップロードする画像を選択してください。画像サイズは 800x480 にリサイズされます。</p>
-						<p>
 							<form action="/photo/upload" name="upload" method="POST" enctype="multipart/form-data">
-								<dl>
-									<dd><input type="file" id="img_file" name="img_file"></dd>
-									<dd><button type="submit" class="btn btn-sm btn-outline-primary">送信</button></dd>
-								</dl>
+								<p></p><input class="form-control me-3" type="file" id="img_file" name="img_file"></p>
+								<p><button type="submit" class="w-100 btn btn-lg btn-primary">送信</button></p>
 							</form>
-						</p>
 				  	</div>
 				</div>
 			</section>
