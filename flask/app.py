@@ -2,7 +2,7 @@ import os
 import requests
 import uuid
 
-from flask import Flask, abort, render_template, request, redirect, url_for
+from flask import Flask, abort, flash, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from PIL import Image
@@ -12,6 +12,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'JPG', 'JPEG'])
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+app.config["SECRET_KEY"] = b'_5#y2L"F4Q8z\n\xec]/'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/photom.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
@@ -72,6 +73,7 @@ def photo_upload():
         if __is_content_type_json(request):
             return result_schema.dump(result)
         else:
+            flash(result.data.description)
             return redirect(url_for('index'))
 
     filename = secure_filename(img_file.filename)
@@ -111,6 +113,7 @@ def photo_delete(id):
         if __is_content_type_json(request):
             return result_schema.dump(result)
         else:
+            flash(result.data.description)
             return redirect(url_for('index'))
 
     # 画像削除
