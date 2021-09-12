@@ -35,6 +35,10 @@ def __is_allowed_extension(file_name):
 def index():
     return photo_list()
 
+@app.route('/switchbot')
+def switch_bot():
+    return render_template('switch_bot.html')
+
 @app.route('/photo/list', methods=['GET'])
 def photo_list():
     photo_dict = __fetch_photo_list()
