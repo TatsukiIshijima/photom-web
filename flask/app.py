@@ -2,11 +2,11 @@ import os
 import requests
 import uuid
 
-from flask import Flask, render_template, request
+from flask import Flask, abort, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from PIL import Image
-from werkzeug.utils import secure_filename
+from werkzeug.utils import redirect, secure_filename
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'JPG', 'JPEG'])
 
@@ -24,37 +24,55 @@ from models.result import *
 
 result_schema = ResultSchema()
 
-@app.route('/', methods=['GET'])
+def __is_content_type_json(request):
+    return request.headers.get('Content-Type') == 'application/json'
+
+def __is_allowed_extension(file_name):
+    return '.' in file_name and file_name.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/')
 def index():
-    result = photo_list()
-    return render_template('index.html', photos=result['photos'])
+    return photo_list()
 
 @app.route('/photo/list', methods=['GET'])
 def photo_list():
+    photo_dict = __fetch_photo_list()
+    if not __is_content_type_json(request):
+        return render_template('index.html', photos=photo_dict['photos'])
+    else :
+        return photo_dict
+
+def __fetch_photo_list():
     photos = Photo.query.all()
     photos_schema = PhotoSchema(many=True)
     result = photos_schema.dump(photos)
-    return {'photos': result}
+    photos_dict = {'photos': result}
+    return photos_dict
 
 @app.route('/photo/upload', methods=['POST'])
 def photo_upload():
 
-    result = Result(Data(1, 'Unknown error.'))
+    result = Result(Data(0, ''))
 
     # 画像保存
     if 'img_file' not in request.files:
-        result.data.description = 'file not exist.'
-        return result_schema.dump(result)
+        return abort(500, 'img_file not define.')
 
     img_file = request.files['img_file']
     
     if img_file.filename == '':
-        result.data.description = 'file is empty.'
-        return result_schema.dump(result)
+        result.data.code = 1
+        result.data.description = 'ファイルが選択されていません。'
 
     if not __is_allowed_extension(img_file.filename):
-        result.data.description = 'invalid extension.'
-        return result_schema.dump(result)
+        result.data.code = 1
+        result.data.description = '無効なファイルです。'
+
+    if result.data.code != 0 and len(result.data.description) != 0:
+        if __is_content_type_json(request):
+            return result_schema.dump(result)
+        else:
+            return redirect(url_for('index'))
 
     filename = secure_filename(img_file.filename)
     _, ext = os.path.splitext(filename)
@@ -73,39 +91,43 @@ def photo_upload():
     db.session.add(photo)
     db.session.commit()
 
-    result.data.code = 0
-    result.data.description = ''
-    return result_schema.dump(result)
-
-def __is_allowed_extension(file_name):
-    return '.' in file_name and file_name.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+    if __is_content_type_json(request):
+        return result_schema.dump(result)
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/photo/delete/<int:id>', methods=['POST'])
 def photo_delete(id):
 
-    result = Result(Data(1, 'Unknown error.'))
+    result = Result(Data(0, ''))
 
     photo = Photo.query.get(id)
     
     if photo is None:
-        result.data.description = 'target is none.'
-        return result_schema.dump(result)
+        result.data.code = 1
+        result.data.description = '削除する写真がありません。'
+
+    if result.data.code != 0 and len(result.data.description) != 0:
+        if __is_content_type_json(request):
+            return result_schema.dump(result)
+        else:
+            return redirect(url_for('index'))
 
     # 画像削除
     filename = os.path.basename(photo.url)
     path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     if not os.path.exists(path):
-        result.data.description = 'file not exist.'
-        return result_schema.dump(result)
+        return abort(500, 'file not exist in upload folder.')
     os.remove(path)
 
     # DB から削除
     db.session.query(Photo).filter(Photo.id == id).delete()
     db.session.commit()
 
-    result.data.code = 0
-    result.data.description = ''
-    return result_schema.dump(result)
+    if __is_content_type_json(request):
+        return result_schema.dump(result)
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/weather', methods=['GET'])
 def weather():
