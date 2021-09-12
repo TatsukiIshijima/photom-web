@@ -39,7 +39,7 @@ def index():
 def photo_list():
     photo_dict = __fetch_photo_list()
     if not __is_content_type_json(request):
-        return render_template('index.html', photos=photo_dict['photos'])
+        return render_template('photo.html', photos=photo_dict['photos'])
     else :
         return photo_dict
 
