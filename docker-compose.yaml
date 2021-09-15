@@ -11,3 +11,7 @@ services:
     # ホスト上の /flask ディレクトリをコンテナ内の /main ディレクトリにマウント
     volumes:
       - ./flask:/main
+    # RaspberryPi の GPIO や I2C を使用するためのオプション
+    devices:
+      - /dev/gpiomem
+      - /dev/i2c-1

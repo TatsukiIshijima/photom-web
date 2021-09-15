@@ -1,7 +1,9 @@
+docopt
 flask
 flask-marshmallow
 flask_sqlalchemy
 marshmallow
 marshmallow-sqlalchemy
+smbus
 Pillow
 requests
