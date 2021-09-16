@@ -1,8 +1,8 @@
 from marshmallow import Schema, fields
 
-class Tsl2561:
+class Tsl:
     def __init__(self, lux):
         self.lux = lux
 
-class Tsl2561Schema(Schema):
+class TslSchema(Schema):
     lux = fields.Str()
