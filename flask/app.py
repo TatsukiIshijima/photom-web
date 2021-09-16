@@ -22,6 +22,7 @@ ma = Marshmallow(app)
 
 from models.photo import *
 from models.result import *
+from rpz_sensor.rpz_sensor_wrapper import *
 
 result_schema = ResultSchema()
 
@@ -135,6 +136,11 @@ def photo_delete(id):
         return result_schema.dump(result)
     else:
         return redirect(url_for('index'))
+
+@app.route('/sensor', methods=['GET'])
+def sensor():
+    rpz_sensor = RpzSensorWrapper()
+    return rpz_sensor.mock_measure()
 
 @app.route('/weather', methods=['GET'])
 def weather():
