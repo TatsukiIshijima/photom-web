@@ -22,7 +22,7 @@ ma = Marshmallow(app)
 
 from models.photo import *
 from models.result import *
-from rpz_sensor.rpz_sensor_wrapper import *
+from rpz_sensor.rpz_sensor_wrapper import RpzSensorWrapper
 
 result_schema = ResultSchema()
 
