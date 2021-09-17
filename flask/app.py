@@ -1,5 +1,6 @@
 import os
 import requests
+import statistics
 import uuid
 
 from flask import Flask, abort, flash, render_template, request, redirect, url_for
@@ -21,10 +22,12 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 from models.photo import *
-from models.result import *
+from models.result import ResultSchema, Result, Data
+from models.sensor import SensorSchema
 from rpz_sensor.rpz_sensor_wrapper import RpzSensorWrapper
 
 result_schema = ResultSchema()
+sensor_schema = SensorSchema()
 
 def __is_content_type_json(request):
     return request.headers.get('Content-Type') == 'application/json'
@@ -38,7 +41,34 @@ def index():
 
 @app.route('/switchbot')
 def switch_bot():
-    return render_template('switch_bot.html', temp=24.8, pressure=1014.5, humidity=65.1, lux=45.9)
+    
+    sensor_data = __get_sensor_data()
+    
+    if not __is_content_type_json(request):
+        
+        temp = 0.0
+        pressure = 0.0
+        humidity = 0.0
+        lux = 0.0
+
+        if sensor_data.bme280_ch1 and sensor_data.bme280_ch2:
+            temp = statistics.median([sensor_data.bme280_ch1.temp, sensor_data.bme280_ch2.temp])
+            pressure = statistics.median([sensor_data.bme280_ch1.pressure, sensor_data.bme280_ch2.pressure])
+            humidity = statistics.median([sensor_data.bme280_ch1.humidity, sensor_data.bme280_ch2.humidity])
+        # Rev2.0 のため TSL2572 のみ対応
+        if sensor_data.tsl2572:
+            lux = sensor_data.tsl2572.lux
+
+        return render_template('switch_bot.html',
+                                temp='{:.1f}'.format(temp),
+                                pressure='{:.1f}'.format(pressure),
+                                humidity='{:.1f}'.format(humidity),
+                                lux='{:.1f}'.format(lux))
+    else:
+        if sensor_data is not None:
+            return sensor_schema.dump(sensor_data)
+        else:
+            return sensor_schema.dump(Result(Data(1, '利用可能なセンサーがありません。')))
 
 @app.route('/photo/list', methods=['GET'])
 def photo_list():
@@ -139,6 +169,13 @@ def photo_delete(id):
 
 @app.route('/sensor', methods=['GET'])
 def sensor():
+    sensor_data = __get_sensor_data()
+    if sensor_data is not None:
+        return sensor_schema.dump(sensor_data)
+    else:
+        return result_schema.dump(Result(Data(1, '利用可能なセンサーがありません。')))
+
+def __get_sensor_data():
     rpz_sensor = RpzSensorWrapper()
     return rpz_sensor.mock_measure()
 

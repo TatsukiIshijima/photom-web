@@ -4,12 +4,10 @@ from rpz_sensor.bme280i2c import BME280I2C
 from rpz_sensor.tsl2561 import TSL2561
 from rpz_sensor.tsl2572 import TSL2572
 
-from models.result import *
-from models.sensor import *
+from models.sensor import Sensor, SensorSchema
 
 class RpzSensorWrapper:
     def __init__(self):
-        self.result_schema = ResultSchema()
         self.sensor_schema = SensorSchema()
         
     def measure(self):
@@ -28,7 +26,7 @@ class RpzSensorWrapper:
         r4 = tsl2572.meas_single()
 
         if not (r1 or r2 or r3):
-            return self.result_schema(Result(Data(1, '使用可能なセンサーがありません')))
+            return None
         
         if r1:
             bme280_ch1 = Bme280(temp=bme280ch1.T, pressure=bme280ch1.P, humidity=bme280ch1.H)
@@ -39,17 +37,12 @@ class RpzSensorWrapper:
         if r4:
             tsl_2572 = Tsl(lux=tsl2572.lux)
 
-        sensor = Sensor(bme280_ch1, bme280_ch2, tsl_2561, tsl_2572)
-        return self.sensor_schema.dump(sensor)
+        return Sensor(bme280_ch1, bme280_ch2, tsl_2561, tsl_2572)
 
     def mock_measure(self):
         bme280_ch1 = Bme280(temp=24.8, pressure=1014.5, humidity=65.1)
         bme280_ch2 = Bme280(temp=28.6, pressure=1015.8, humidity=51.9)
         tsl2561 = None
         tsl2572 = Tsl(lux=45.9)
-        sensor = Sensor(bme280_ch1,
-                        bme280_ch2,
-                        tsl2561,
-                        tsl2572)
-        return self.sensor_schema.dump(sensor)
+        return Sensor(bme280_ch1, bme280_ch2, tsl2561, tsl2572)
         
