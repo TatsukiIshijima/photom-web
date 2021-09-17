@@ -142,3 +142,6 @@ cython_debug/
 
 # upload files
 flask/static/uploads/
+
+# config file
+flask/config.py

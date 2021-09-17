@@ -1,3 +1,4 @@
+import config
 import os
 import requests
 import statistics
@@ -188,7 +189,7 @@ def weather():
         'execlude': 'minutely',
         'units': 'metric',
         'lang': 'ja',
-        'appid': 'apikey'
+        'appid': config.OPEN_WEATHER_API_KEY
     }
     request = requests.get(url, params)
     return request.json()
