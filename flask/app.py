@@ -10,7 +10,7 @@ from flask_marshmallow import Marshmallow
 from PIL import Image
 from werkzeug.utils import redirect, secure_filename
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'JPG', 'JPEG'])
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'JPG', 'JPEG'}
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
