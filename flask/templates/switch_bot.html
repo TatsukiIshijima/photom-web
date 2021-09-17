@@ -57,6 +57,54 @@
 			<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
 				<h1 class="display-4">Switch Bot</h1>
 				<p class="lead">Switch Bot から家電を操作できます。</p>
+				<div class="row px-4 py-4 row-cols-1 row-cols-md-4 mb-4 text-center">
+					{% block content %}
+						{% if temp %}
+							<div class="col">
+								<h1 class="card-title pricing-card-title">
+									<small class="text-muted">温度 </small>
+								</h1>
+								<h1 class="card-title pricing-card-title">
+									{{ temp }}
+									<small class="text-muted"> ℃</small>
+								</h1>
+							</div>
+						{% endif %}
+						{% if pressure %}
+							<div class="col">
+								<h1 class="card-title pricing-card-title">
+									<small class="text-muted">圧力 </small>
+								</h1>
+								<h1 class="card-title pricing-card-title">
+									{{ pressure }}
+									<small class="text-muted"> hPa</small>
+								</h1>
+							</div>
+						{% endif %}
+						{% if humidity %}
+							<div class="col">
+								<h1 class="card-title pricing-card-title">
+									<small class="text-muted">湿度 </small>
+								</h1>
+								<h1 class="card-title pricing-card-title">
+									{{ humidity }}
+									<small class="text-muted"> %</small>
+								</h1>
+							</div>
+						{% endif %}
+						{% if lux %}
+							<div class="col">
+								<h1 class="card-title pricing-card-title">
+									<small class="text-muted">照度 </small>
+								</h1>
+								<h1 class="card-title pricing-card-title">
+									{{ lux }}
+									<small class="text-muted"> lux</small>
+								</h1>
+							</div>
+						{% endif %}
+					{% endblock %}
+				</div>
 			</div>
 			<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
 				<div class="col">

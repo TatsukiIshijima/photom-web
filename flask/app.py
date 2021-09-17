@@ -38,7 +38,7 @@ def index():
 
 @app.route('/switchbot')
 def switch_bot():
-    return render_template('switch_bot.html')
+    return render_template('switch_bot.html', temp=24.8, pressure=1014.5, humidity=65.1, lux=45.9)
 
 @app.route('/photo/list', methods=['GET'])
 def photo_list():
