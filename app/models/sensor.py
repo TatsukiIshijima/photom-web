@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields
-from models.tsl import TslSchema
-from models.bme280 import Bme280Schema
+from .tsl import TslSchema
+from .bme280 import Bme280Schema
 
 class Sensor:
     def __init__(self, bme280_ch1, bme280_ch2, tsl2561, tsl2572):

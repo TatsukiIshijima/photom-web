@@ -12,6 +12,6 @@ services:
     volumes:
       - .:/main
     # RaspberryPi の GPIO や I2C を使用するためのオプション
-     devices:
-       - /dev/gpiomem
-       - /dev/i2c-1
+#     devices:
+#       - /dev/gpiomem
+#       - /dev/i2c-1
