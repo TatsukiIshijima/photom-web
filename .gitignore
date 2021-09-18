@@ -144,4 +144,4 @@ cython_debug/
 app/static/uploads/
 
 # config file
-app/private_config.py
+private_config.py

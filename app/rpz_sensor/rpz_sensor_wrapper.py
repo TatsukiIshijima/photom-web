@@ -1,10 +1,10 @@
-from models.tsl import Tsl
-from models.bme280 import Bme280
-from rpz_sensor.bme280i2c import BME280I2C
-from rpz_sensor.tsl2561 import TSL2561
-from rpz_sensor.tsl2572 import TSL2572
+from app.models.tsl import Tsl
+from app.models.bme280 import Bme280
+from app.rpz_sensor.bme280i2c import BME280I2C
+from app.rpz_sensor.tsl2561 import TSL2561
+from app.rpz_sensor.tsl2572 import TSL2572
 
-from models.sensor import Sensor, SensorSchema
+from app.models.sensor import Sensor, SensorSchema
 
 class RpzSensorWrapper:
     def __init__(self):

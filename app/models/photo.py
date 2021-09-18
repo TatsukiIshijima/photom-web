@@ -1,7 +1,6 @@
+from app.models import db
 from datetime import datetime
 from marshmallow import Schema, fields
-
-from app import db
 
 class Photo(db.Model):
     __tablename__ = "Photos"
