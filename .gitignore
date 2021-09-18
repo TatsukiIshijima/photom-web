@@ -141,7 +141,7 @@ cython_debug/
 *.db
 
 # upload files
-flask/static/uploads/
+app/static/uploads/
 
 # config file
-flask/config.py
+app/config.py
