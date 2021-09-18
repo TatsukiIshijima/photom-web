@@ -13,8 +13,8 @@ from werkzeug.utils import redirect, secure_filename
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'JPG', 'JPEG'}
 
 app = Flask(__name__)
-app.config.from_json('config.json')
-app.config["SECRET_KEY"] = private_config.SECRET_KEY
+env_config = os.getenv('APP_SETTINGS', 'config.DevelopmentConfig')
+app.config.from_object(env_config)
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -187,10 +187,10 @@ def weather():
         'execlude': 'minutely',
         'units': 'metric',
         'lang': 'ja',
-        'appid': private_config.OPEN_WEATHER_API_KEY
+        'appid': app.config.get('OPEN_WEATHER_API_KEY')
     }
     result = requests.get(url, params)
     return result.json()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0")
