@@ -1,10 +1,10 @@
-import private_config
 import os
+import private_config
 import requests
 import statistics
 import uuid
 
-from flask import Flask, abort, flash, render_template, request, redirect, url_for
+from flask import Flask, abort, flash, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from PIL import Image
@@ -112,17 +112,18 @@ def photo_upload():
     filename = secure_filename(img_file.filename)
     _, ext = os.path.splitext(filename)
     filename = str(uuid.uuid4()) + ext
-    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    img_file.save(path)
+    app_relative_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    app_absolute_path = os.path.join('app', app_relative_path)
+    img_file.save(app_absolute_path)
 
     # リサイズ
     # FIXME: アスペクト維持
-    img = Image.open(path)
+    img = Image.open(app_absolute_path)
     img_resize = img.resize((800, 480))
-    img_resize.save(path)
+    img_resize.save(app_absolute_path)
 
     # DB 書き込み
-    photo = Photo(url=os.path.join('http://0.0.0.0:5000/', path))
+    photo = Photo(url=os.path.join('http://0.0.0.0:5000/', app_relative_path))
     db.session.add(photo)
     db.session.commit()
 
@@ -151,10 +152,10 @@ def photo_delete(id):
 
     # 画像削除
     filename = os.path.basename(photo.url)
-    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    if not os.path.exists(path):
+    app_absolute_path = os.path.join('app', app.config['UPLOAD_FOLDER'], filename)
+    if not os.path.exists(app_absolute_path):
         return abort(500, 'file not exist in upload folder.')
-    os.remove(path)
+    os.remove(app_absolute_path)
 
     # DB から削除
     db.session.query(Photo).filter(Photo.id == id).delete()
@@ -188,8 +189,8 @@ def weather():
         'lang': 'ja',
         'appid': private_config.OPEN_WEATHER_API_KEY
     }
-    request = requests.get(url, params)
-    return request.json()
+    result = requests.get(url, params)
+    return result.json()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

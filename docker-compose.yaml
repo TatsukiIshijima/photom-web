@@ -4,13 +4,13 @@
 version: '3'
 services: 
   flask:
-    # /app ディレクトリの Dockerfile からイメージ構築
-    build: app
+    # カレントディレクトリの Dockerfile からイメージ構築
+    build: .
     ports: 
       - "5000:5000"
-    # ホスト上の /app ディレクトリをコンテナ内の /main ディレクトリにマウント
+    # ホスト上のカレントディレクトリをコンテナ内の /main ディレクトリにマウント
     volumes:
-      - ./app:/main
+      - .:/main
     # RaspberryPi の GPIO や I2C を使用するためのオプション
      devices:
        - /dev/gpiomem
