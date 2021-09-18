@@ -1,0 +1,7 @@
+{
+  "DEBUG": true,
+  "JSON_AS_ASCII": false,
+  "SQLALCHEMY_DATABASE_URI": "sqlite:///db/photom.db",
+  "SQLALCHEMY_TRACK_MODIFICATIONS": false,
+  "UPLOAD_FOLDER": "static/uploads"
+}

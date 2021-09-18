@@ -1,4 +1,4 @@
-import config
+import private_config
 import os
 import requests
 import statistics
@@ -13,11 +13,8 @@ from werkzeug.utils import redirect, secure_filename
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'JPG', 'JPEG'}
 
 app = Flask(__name__)
-app.config['JSON_AS_ASCII'] = False
-app.config["SECRET_KEY"] = b'_5#y2L"F4Q8z\n\xec]/'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db/photom.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config.from_json('config.json')
+app.config["SECRET_KEY"] = private_config.SECRET_KEY
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -189,7 +186,7 @@ def weather():
         'execlude': 'minutely',
         'units': 'metric',
         'lang': 'ja',
-        'appid': config.OPEN_WEATHER_API_KEY
+        'appid': private_config.OPEN_WEATHER_API_KEY
     }
     request = requests.get(url, params)
     return request.json()
