@@ -58,10 +58,10 @@ def photo_update():
     img_file.save(app_absolute_path)
 
     # リサイズ
-    # FIXME: アスペクト維持
     img = Image.open(app_absolute_path)
-    img_resize = img.resize((800, 480))
-    img_resize.save(app_absolute_path)
+    # 短辺に合わせてしまうため、800x480 を x1.2 した値を設定
+    img.thumbnail(size=(960, 576))
+    img.save(app_absolute_path)
 
     photo_repository.upload_photo(domain= f'http://{current_app.config["HOST_NAME"]}',
                                   path=app_relative_path)
