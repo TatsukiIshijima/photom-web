@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, render_template
 from app.models.rpz_sensor.sensor import SensorSchema
+from app.models.switch_bot.remote_device_model import make_from
 from app.models.switch_bot.response.devices import DevicesSchema
 from app.repositories.sensor_repository import SensorRepository
 from app.repositories.switch_bot_repository import SwitchbotRepository
@@ -18,12 +19,14 @@ def switch_bot():
     devices_schema = DevicesSchema()
     devices = devices_schema.load(devices_response)
 
+    remote_device_list = list(map(make_from, devices.body.remote_device_list))
+
     return render_template('switch_bot.html',
                            temp='{:.1f}'.format(sensor_data.temp),
                            pressure='{:.1f}'.format(sensor_data.pressure),
                            humidity='{:.1f}'.format(sensor_data.humidity),
                            lux='{:.1f}'.format(sensor_data.lux),
-                           remote_devices=devices.body.remote_device_list)
+                           remote_devices=remote_device_list)
 
 @app.route('/switchbot/devices', methods=['GET'])
 def switch_bot_devices():
