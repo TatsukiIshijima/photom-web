@@ -59,15 +59,18 @@
                 {% for remote in remote_devices %}
                     <div class="col">
                         <div class="card mb-4 shadow-sm">
-                        <div class="card-header">
-                            <h4 class="my-0 fw-normal">{{ remote.device_name }}</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="py-4">
-                                <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/{{ remote.icon_file }}" alt="light">
+                            <div class="card-header">
+                                <h4 class="my-0 fw-normal">{{ remote.device_name }}</h4>
                             </div>
-                            <button type="button" class="w-100 btn btn-lg btn-primary">詳細</button>
-                        </div>
+                            <div class="card-body">
+                                <div class="py-4">
+                                    <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/{{ remote.icon_file }}" alt="light">
+                                </div>
+                                <button type="button" class="w-100 btn btn-lg btn-primary" data-bs-toggle="modal" data-bs-target="#{{ remote.device_name }}Modal">操作</button>
+                                {% with remote = remote %}
+                                {% include "controller_modal.html" %}
+                                {% endwith %}
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
