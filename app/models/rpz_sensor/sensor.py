@@ -1,6 +1,6 @@
 from app.models.rpz_sensor.bme280 import Bme280
 from app.models.rpz_sensor.tsl import Tsl
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_load
 
 import statistics
 
@@ -25,7 +25,11 @@ class Sensor:
         self.lux = lux
 
 class SensorSchema(Schema):
-    temp = fields.Float()
-    pressure = fields.Float()
-    humidity = fields.Float()
-    lux = fields.Float()
+    temp = fields.Float(required=True)
+    pressure = fields.Float(required=True)
+    humidity = fields.Float(required=True)
+    lux = fields.Float(required=True)
+
+    @post_load
+    def make_sensor(self, data, **kwargs):
+        return Sensor(**data)
