@@ -1,5 +1,5 @@
 from app.models import db
-from app.models.photo import Photo, PhotoSchema
+from app.models.photo.photo import Photo, PhotoSchema
 
 import os
 

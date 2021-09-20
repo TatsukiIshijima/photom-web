@@ -1,5 +1,5 @@
 from app.repositories.photo_repository import PhotoRepository
-from app.models.photo import Photo
+from app.models.photo.photo import Photo
 from app.models.result import Result, ResultSchema, Data
 from app.util import is_allowed_extension, is_content_type_json
 from flask import abort, Blueprint, current_app, flash, render_template, redirect, request, url_for
@@ -19,11 +19,11 @@ def index():
 
 @app.route('/photo/list', methods=['GET'])
 def photo_list():
-    photos_dict = photo_repository.fetch_photos()
+    photos_response = photo_repository.fetch_photos()
     if not is_content_type_json():
-        return render_template('photo.html', photos=photos_dict['photos'])
+        return render_template('photo.html', photos=photos_response['photos'])
     else:
-        return photos_dict
+        return photos_response
 
 @app.route('/photo/upload', methods=['POST'])
 def photo_update():

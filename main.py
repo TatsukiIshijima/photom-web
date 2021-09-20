@@ -4,7 +4,7 @@ from app import create_app, db
 # 以下の import はスクリプト上で
 # 参照されていないが DB を作成するのに必要
 """
-from app.models.photo import Photo
+from app.models.photo.photo import Photo
 
 photom_app = create_app()
 

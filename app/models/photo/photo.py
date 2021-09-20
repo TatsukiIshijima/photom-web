@@ -1,6 +1,6 @@
 from app.models import db
 from datetime import datetime
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_load
 
 class Photo(db.Model):
     __tablename__ = "Photos"
@@ -9,6 +9,10 @@ class Photo(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
 class PhotoSchema(Schema):
-    id = fields.Int(dump_only=True)
+    id = fields.Int()
     url = fields.Str()
-    created_at = fields.DateTime(dump_only=True)
+    created_at = fields.DateTime()
+
+    @post_load
+    def make_photo(self, data, **kwargs):
+        return Photo(**data)
