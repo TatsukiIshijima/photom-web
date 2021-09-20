@@ -6,11 +6,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{ remote.device_id }}
+                {% if (remote.icon_file == 'fan_icon.png' or remote.icon_file == 'light_icon.png') %}
+                    {% with device_id = remote.device_id %}
+                    {% include "simple_controller.html" %}
+                    {% endwith %}
+                {% endif %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-{#                <button type="button" class="btn btn-primary">Save changes</button>#}
             </div>
         </div>
     </div>
