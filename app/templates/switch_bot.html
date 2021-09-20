@@ -54,71 +54,25 @@
         </div>
     </div>
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-        <div class="col">
-            <div class="card mb-4 shadow-sm">
-            <div class="card-header">
-                <h4 class="my-0 fw-normal">照明（リビング）</h4>
-            </div>
-            <div class="card-body">
-                <div class="py-4">
-                    <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/light_icon.png" alt="light">
-                </div>
-                <button type="button" class="w-100 btn btn-lg btn-primary">詳細</button>
-            </div>
-            </div>
-        </div>
-        <div class="col">
-             <div class="card mb-4 shadow-sm">
-            <div class="card-header">
-                <h4 class="my-0 fw-normal">エアコン（リビング）</h4>
-            </div>
-            <div class="card-body">
-                <div class="py-4">
-                    <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/aircon_icon.png" alt="light">
-                </div>
-                <button type="button" class="w-100 btn btn-lg btn-primary">詳細</button>
-            </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card mb-4 shadow-sm">
-            <div class="card-header">
-                <h4 class="my-0 fw-normal">扇風機</h4>
-            </div>
-            <div class="card-body">
-                <div class="py-4">
-                    <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/fan_icon.png" alt="light">
-                </div>
-                <button type="button" class="w-100 btn btn-lg btn-primary">詳細</button>
-            </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card mb-4 shadow-sm">
-            <div class="card-header">
-                <h4 class="my-0 fw-normal">照明（部屋）</h4>
-            </div>
-            <div class="card-body">
-                <div class="py-4">
-                    <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/light_icon.png" alt="light">
-                </div>
-                <button type="button" class="w-100 btn btn-lg btn-primary">詳細</button>
-            </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card mb-4 shadow-sm">
-            <div class="card-header">
-                <h4 class="my-0 fw-normal">エアコン（部屋）</h4>
-            </div>
-            <div class="card-body">
-                <div class="py-4">
-                    <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/aircon_icon.png" alt="light">
-                </div>
-                <button type="button" class="w-100 btn btn-lg btn-primary">詳細</button>
-            </div>
-            </div>
-      </div>
+        {% block page_content %}
+            {% if remote_devices %}
+                {% for remote in remote_devices %}
+                    <div class="col">
+                        <div class="card mb-4 shadow-sm">
+                        <div class="card-header">
+                            <h4 class="my-0 fw-normal">{{ remote.device_name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="py-4">
+                                <img class="rounded mx-auto d-block" width="60%" height="60%" src="./static/resources/light_icon.png" alt="light">
+                            </div>
+                            <button type="button" class="w-100 btn btn-lg btn-primary">詳細</button>
+                        </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endblock %}
     </div>
 </main>
 {% endblock %}
