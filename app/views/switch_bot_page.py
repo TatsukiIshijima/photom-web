@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template
+from flask import Blueprint, current_app, render_template, redirect, url_for
 from app.models.rpz_sensor.sensor import SensorSchema
 from app.models.switch_bot.remote_device_model import make_from
 from app.models.switch_bot.response.devices import DevicesSchema
@@ -36,12 +36,20 @@ def switch_bot_devices():
 @app.route('/switchbot/<string:id>/turn_on', methods=['POST'])
 def switch_bot_turn_on(id):
     switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
-    return switch_bot_repository.turn_on_device(id)
+    turn_on_response = switch_bot_repository.turn_on_device(id)
+    if is_content_type_json():
+        return turn_on_response
+    else:
+        return redirect(url_for('switchbot.switch_bot'))
 
 @app.route('/switchbot/<string:id>/turn_off', methods=['POST'])
 def switch_bot_turn_off(id):
     switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
-    return switch_bot_repository.turn_off_device(id)
+    turn_off_response = switch_bot_repository.turn_off_device(id)
+    if is_content_type_json():
+        return turn_off_response
+    else:
+        return redirect(url_for('switchbot.switch_bot'))
 
 # @app.route('/switchbot/<string:id>/aircon_command', methods=['POST'])
 # def switch_bot_aircon(id):
