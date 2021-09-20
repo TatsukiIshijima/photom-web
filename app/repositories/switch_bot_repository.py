@@ -1,4 +1,4 @@
-from app.models.switch_bot.device_command import DeviceCommand, DeviceCommandSchema
+from app.models.switch_bot.request.device_command import DeviceCommand, DeviceCommandSchema
 
 import requests
 

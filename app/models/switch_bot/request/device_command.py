@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields
 
 class DeviceCommand:
     def __init__(self, command, parameter, command_type):
