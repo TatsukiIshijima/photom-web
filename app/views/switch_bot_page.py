@@ -5,7 +5,6 @@ from app.models.switch_bot.response.devices import DevicesSchema
 from app.repositories.sensor_repository import SensorRepository
 from app.repositories.switch_bot_repository import SwitchbotRepository
 from app.repositories.weather_repository import WeatherRepository
-from app.util import is_content_type_json
 
 app = Blueprint('switchbot', __name__, template_folder='templates')
 
@@ -69,7 +68,7 @@ def switch_bot_aircon(id):
 def switch_bot_turn_on(id):
     switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
     turn_on_response = switch_bot_repository.turn_on_device(id)
-    if is_content_type_json():
+    if request.is_json:
         return turn_on_response
     else:
         return redirect(url_for('switchbot.switch_bot'))
@@ -78,7 +77,7 @@ def switch_bot_turn_on(id):
 def switch_bot_turn_off(id):
     switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
     turn_off_response = switch_bot_repository.turn_off_device(id)
-    if is_content_type_json():
+    if request.is_json:
         return turn_off_response
     else:
         return redirect(url_for('switchbot.switch_bot'))

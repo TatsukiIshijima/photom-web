@@ -1,7 +1,7 @@
 from app.repositories.photo_repository import PhotoRepository
 from app.models.photo.photo import Photo
 from app.models.result import Result, ResultSchema, Data
-from app.util import is_allowed_extension, is_content_type_json
+from app.util import is_allowed_extension
 from flask import abort, Blueprint, current_app, flash, render_template, redirect, request, url_for
 from PIL import Image
 from werkzeug.utils import secure_filename
@@ -20,7 +20,7 @@ def index():
 @app.route('/photo/list', methods=['GET'])
 def photo_list():
     photos_response = photo_repository.fetch_photos()
-    if not is_content_type_json():
+    if not request.is_json:
         return render_template('photo.html', photos=photos_response['photos'])
     else:
         return photos_response
@@ -44,7 +44,7 @@ def photo_update():
         result.data.description = '無効なファイルです。'
 
     if result.data.code != 0 and len(result.data.description) != 0:
-        if is_content_type_json():
+        if request.is_json:
             return result_schema.dump(result)
         else:
             flash(result.data.description)
@@ -66,7 +66,7 @@ def photo_update():
     photo_repository.upload_photo(domain= f'http://{current_app.config["HOST_NAME"]}',
                                   path=app_relative_path)
 
-    if is_content_type_json():
+    if request.is_json:
         return result_schema.dump(result)
     else:
         return redirect(url_for('photo.index'))
@@ -80,7 +80,7 @@ def photo_delete(id):
         result.data.code = 1
         result.data.description = '削除する写真がありません。'
     if result.data.code != 0 and len(result.data.description) != 0:
-        if is_content_type_json():
+        if request.is_json:
             return result_schema.dump(result)
         else:
             flash(result.data.description)
@@ -95,7 +95,7 @@ def photo_delete(id):
 
     photo_repository.delete_photo(index=id)
 
-    if is_content_type_json():
+    if request.is_json:
         return result_schema.dump(result)
     else:
         return redirect(url_for('photo.index'))
