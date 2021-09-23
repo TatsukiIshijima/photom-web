@@ -11,6 +11,11 @@
                     {% include "simple_controller.html" %}
                     {% endwith %}
                 {% endif %}
+                {% if remote.icon_file == 'aircon_icon.png' %}
+                    {% with device_id = remote.device_id %}
+                    {% include "aircon_controller.html" %}
+                    {% endwith %}
+                {% endif %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

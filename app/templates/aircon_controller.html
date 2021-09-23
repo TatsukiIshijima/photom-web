@@ -1,0 +1,38 @@
+<script>
+    function updateText(value) {
+        document.getElementById('tempValue').innerHTML = value + '<small> ℃</small>'
+    }
+</script>
+<div class="pricing-header px-3 py-3 pb-md-4 mx-auto text-center">
+
+    <div class="row mb-4">
+        <form>
+            <h1 class="card-title pricing-card-title" id="tempValue">
+                27
+                <small> ℃</small>
+            </h1>
+            <input type="range" class="form-range mt-2" id="rangeInput" name="rangeInput" min="10" max="30" step="1", value="27" onchange="updateText(this.value);">
+        </form>
+    </div>
+
+    <div class="btn-group w-100 text-truncate" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="options-outlined" id="cool-mode" autocomplete="off" checked>
+        <label class="btn btn-outline-primary m-0 selected text-truncate" for="cool-mode">冷房</label>
+
+        <input type="radio" class="btn-check" name="options-outlined" id="heat-mode" autocomplete="off">
+        <label class="btn btn-outline-danger m-0 selected text-truncate" for="heat-mode">暖房</label>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col">
+    {#        <form action="/switchbot/{{ device_id }}/turn_on" name="turnOn" method="POST">#}
+                <button type="submit" class="form-control btn btn-outline-primary btn-lg rounded-pill ">On</button>
+    {#        </form>#}
+        </div>
+        <div class="col">
+    {#        <form action="/switchbot/{{ device_id }}/turn_off" name="turnOff" method="POST">#}
+                <button type="submit" class="form-control btn btn-outline-primary btn-lg rounded-pill">Off</button>
+    {#        </form>#}
+        </div>
+    </div>
+</div>
