@@ -35,15 +35,23 @@ def switch_bot_devices():
 
 @app.route('/switchbot/aircon/<string:id>', methods=['POST'])
 def switch_bot_aircon(id):
-    if is_content_type_json():
-        # TODO:
-        return ''
+
+    switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
+
+    if request.is_json:
+        json = request.get_json()
+        if json is None:
+            return abort(400)
+        temp = json.get('temp')
+        is_cool_mode = json.get('is_cool_mode')
+        is_turn_on = json.get('is_turn_on')
+        if temp is None or is_cool_mode is None or is_turn_on is None:
+            return abort(400)
+        return switch_bot_repository.setup_aircon(device_id=id, temp=temp, is_cool_mode=is_cool_mode, is_turn_on=is_turn_on)
     else:
         power_button_value = request.form.get('power_button')
         if power_button_value is None:
             abort(500, 'Not define power_button')
-
-        switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
 
         temp = request.form.get('rangeInput')
         is_cool_mode = request.form.get('options-outlined') == 0
