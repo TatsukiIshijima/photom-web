@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, redirect, url_for
+from flask import abort, Blueprint, current_app, render_template, redirect, request, url_for
 from app.models.rpz_sensor.sensor import SensorSchema
 from app.models.switch_bot.remote_device_model import make_from
 from app.models.switch_bot.response.devices import DevicesSchema
@@ -33,6 +33,30 @@ def switch_bot_devices():
     switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
     return switch_bot_repository.fetch_devices()
 
+@app.route('/switchbot/aircon/<string:id>', methods=['POST'])
+def switch_bot_aircon(id):
+    if is_content_type_json():
+        # TODO:
+        return ''
+    else:
+        power_button_value = request.form.get('power_button')
+        if power_button_value is None:
+            abort(500, 'Not define power_button')
+
+        switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
+
+        temp = request.form.get('rangeInput')
+        is_cool_mode = request.form.get('options-outlined') == 0
+
+        if power_button_value == 'On':
+            switch_bot_repository.setup_aircon(device_id=id, temp=temp, is_cool_mode=is_cool_mode, is_turn_on=True)
+        elif power_button_value == 'Off':
+            switch_bot_repository.setup_aircon(device_id=id, temp=temp, is_cool_mode=is_cool_mode, is_turn_on=False)
+        else:
+            abort(500, 'Unknown value')
+
+        return redirect(url_for('switchbot.switch_bot'))
+
 @app.route('/switchbot/<string:id>/turn_on', methods=['POST'])
 def switch_bot_turn_on(id):
     switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
@@ -50,19 +74,6 @@ def switch_bot_turn_off(id):
         return turn_off_response
     else:
         return redirect(url_for('switchbot.switch_bot'))
-
-# @app.route('/switchbot/<string:id>/aircon_command', methods=['POST'])
-# def switch_bot_aircon(id):
-#     payload = request.get_data()
-#     return type(payload)
-#     if not ('temp' in payload and 'is_cool_mode' in payload and 'is_turn_on' in payload):
-#         return abort(400)
-#     temp = payload['temp']
-#     is_cool_mode = payload['is_cool']
-#     is_turn_on = payload['is_turn_on']
-    # return payload
-    # switch_bot_repository = SwitchbotRepository(token=current_app.config['SWITCH_BOT_TOKEN'])
-    # return switch_bot_repository.setup_aircon(device_id=id, temp=temp, is_cool_mode=is_cool_mode, is_turn_on=is_turn_on)
 
 @app.route('/sensor', methods=['GET'])
 def sensor():
