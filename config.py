@@ -3,7 +3,7 @@ import private_config
 class Config:
     DEBUG = False
     DEVELOPMENT = False
-    HOST_NAME = 'localhost:5000'
+    HOST_NAME = 'raspbserrpi-zero.local:5000'
     JSON_AS_ASCII = False
     OPEN_WEATHER_API_KEY = private_config.OPEN_WEATHER_API_KEY
     SECRET_KEY = private_config.SECRET_KEY
