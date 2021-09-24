@@ -86,7 +86,7 @@ def switch_bot_turn_off(id):
 def sensor():
     sensor_repository = SensorRepository()
     sensor_schema = SensorSchema()
-    sensor_data = sensor_repository.fetch_mock_sensor_data()
+    sensor_data = sensor_repository.fetch_sensor_data()
     return sensor_schema.dump(sensor_data)
 
 @app.route('/weather', methods=['GET'])
