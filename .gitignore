@@ -141,7 +141,8 @@ cython_debug/
 *.db
 
 # upload files
-app/static/uploads/
+app/static/uploads/*
+!app/static/uploads/.gitkeep
 
 # config file
 private_config.py
