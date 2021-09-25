@@ -32,6 +32,7 @@
 requirements.txt 参照
 
 ## 初期設定
+#### 外部の API （OpenWeather と Switch bot）を使用するための設定
 1. プロジェクト直下に private_config.py というファイルを作成
 2. 以下の内容を追加し、値をそれぞれ設定
 
@@ -39,6 +40,32 @@ requirements.txt 参照
 OPEN_WEATHER_API_KEY = 'ここに OpenWeather API Key を入力'
 SWITCH_BOT_TOKEN = 'ここに Switch bot Token を入力'
 SECRET_KEY = '任意文字列'
+```
+
+#### RaspberryPi に Docker と docker-compose をインストール
+```
+# curl https://get.docker.com | sh
+# apt install docker-compose
+```
+
+＊ Docker を使用するにあたり、メモリ不足になる可能性があるためスワップを増やしておくのを推奨。以下コマンドでファイルを開き、`CONF_SWAPSIZE` の部分を任意のサイズに変更する
+```
+sudo vim /etc/dphys-swapfile
+```
+
+#### RaspberryPi のローカルホスト名変更
+デフォルトのローカルホスト名が raspberrypi.local になっているので raspberrypi-zero.local に変更する。以下2つのファイルの raspberrypi の部分を raspberrypi-zero に変更する
+```
+sudo vim /etc/hostname
+sudo vim /etc/hosts
+```
+
+ローカルホスト名を変更したくない場合は、config.py の `HOST_NAME` の値を raspberrypi.local に変更する
+
+#### RaspberryPi の I2C を有効化
+RPZ-IR-Sensor を使用するため、以下コマンドから設定を開き、I2Cを有効化しておく
+```
+# sudo raspi-config
 ```
 
 ## 起動方法
