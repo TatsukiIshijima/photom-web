@@ -53,14 +53,28 @@ SECRET_KEY = '任意文字列'
 sudo vim /etc/dphys-swapfile
 ```
 
-#### RaspberryPi のローカルホスト名変更
+#### RaspberryPi の IP アドレスを固定する（無線）
+```
+sudo vim /etc/dhcpcd.conf
+```
+上記コマンドでファイルを開き、以下のように追記する。
+```
+interface wlan0
+static ip_address=192.168.11.60/24
+static routers=192.168.11.1
+static domain_name_servers=192.168.11.1
+```
+IPアドレスはルータ側で割り当てられるIPの数と割り当てられているIPを確認した上で設定する。ゲートウェイなどは以下コマンドで確認する。
+```
+route -n
+```
+
+#### RaspberryPi のローカルホスト名変更（任意）
 デフォルトのローカルホスト名が raspberrypi.local になっているので raspberrypi-zero.local に変更する。以下2つのファイルの raspberrypi の部分を raspberrypi-zero に変更する
 ```
 sudo vim /etc/hostname
 sudo vim /etc/hosts
 ```
-
-ローカルホスト名を変更したくない場合は、config.py の `HOST_NAME` の値を raspberrypi.local に変更する
 
 #### RaspberryPi の I2C を有効化
 RPZ-IR-Sensor を使用するため、以下コマンドから設定を開き、I2Cを有効化しておく
